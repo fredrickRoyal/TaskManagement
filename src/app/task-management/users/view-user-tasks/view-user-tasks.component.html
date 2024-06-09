@@ -1,0 +1,80 @@
+<mat-toolbar color="primary" class="flex justify-between">
+    <span>{{data?.email}} Tasks</span>
+    <button mat-raised-button color="warn" mat-dialog-close>close</button>
+</mat-toolbar>
+
+
+<div class="flex justify-center mt-8" *ngIf="tasks().length>0">
+    <div class="flex justify-between w-[90%]">
+        <div class="flex w-1/2">
+            <mat-form-field appearance="fill" class="w-full">
+                <input matInput placeholder="search by name" (keyup)="search(searchInput.value)" #searchInput>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+
+
+
+<mat-progress-bar mode="indeterminate" *ngIf="loading()" class="my-1"></mat-progress-bar>
+
+
+<div class="flex justify-center">
+    <div class="mat-elevation-z8  w-[90%]" *ngIf="tasks().length > 0 ;else noTaskFound">
+        <table [dataSource]="dataSource" mat-table matSort aria-label="Tasks">
+            <!-- Id Column -->
+            <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
+                <td mat-cell *matCellDef="let row;let index=index">{{index+1}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">{{row.name}}</td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let row">{{row.status}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                <td mat-cell *matCellDef="let row">{{row.description}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>CreatedAt</th>
+                <td mat-cell *matCellDef="let row">{{row.createdDateTime|date:"MMM dd, yyyy 'at' hh:mm a"}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                <td mat-cell *matCellDef="let data">
+                    <mat-form-field appearance="fill">
+                        <mat-select placeholder="Task Status" [value]="data.status" (selectionChange)="selectedTaskStatus($event , data)">
+                            <mat-option *ngFor="let status of taskStatus" [value]="status">
+                                {{status}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator #paginator [length]="dataSource.data.length" [pageIndex]="0" [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 20]" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</div>
+
+
+<ng-template #noTaskFound>
+    <div class="text-orange-500 p-8 text-2xl font-bold">{{data?.email}} has no task assigned</div>
+</ng-template>

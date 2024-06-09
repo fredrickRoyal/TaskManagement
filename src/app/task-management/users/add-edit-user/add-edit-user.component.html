@@ -1,0 +1,30 @@
+<mat-toolbar color="primary" class="flex justify-between">
+    <span>{{isEdit() ? 'Edit '+data?.email : 'Create New User'}}</span>
+    <button mat-raised-button color="warn" mat-dialog-close >close</button>
+</mat-toolbar>
+
+<mat-progress-bar mode="indeterminate" *ngIf="loading()" class="my-1"></mat-progress-bar>
+
+<form class="flex flex-col p-4 shadow-md" [formGroup]="formGroup">
+    <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="email" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Firstname</mat-label>
+        <input matInput placeholder="firstname" formControlName="firstname">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Lastname</mat-label>
+        <input matInput placeholder="lastname" formControlName="lastname">
+    </mat-form-field>
+
+
+    <div class="flex justify-end items-center p-2">
+        <button mat-raised-button color="primary" (click)="submit()"
+            [disabled]="formGroup.invalid || loading()">{{this.isEdit() ? 'Edit': 'Save'}}</button>
+    </div>
+
+</form>
